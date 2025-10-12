@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../generated/prisma"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -12,22 +13,25 @@ model dishes {
   dish_id    Int      @id(map: "dish_pk") @default(autoincrement())
   dish_name  String   @unique(map: "dish_unique") @db.VarChar
   dish_price Decimal? @db.Decimal
-  orders     orders[] @ignore
+  orders     orders[]
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model orders {
-  order_id Int     @default(autoincrement())
+  order_id Int     @id @default(autoincrement())
   user_id  Int?
   dish_id  Int?
   dishes   dishes? @relation(fields: [dish_id], references: [dish_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_dish")
   users    users?  @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order_user")
-
-  @@ignore
 }
 
 model users {
   user_id   Int      @id(map: "usres_pk") @default(autoincrement())
   user_name String   @unique(map: "usres_unique") @db.VarChar
-  orders    orders[] @ignore
+  orders    orders[]
+}
+
+view orders_join {
+  user_name  String?  @db.VarChar
+  dish_name  String?  @db.VarChar
+  dish_price Decimal? @db.Decimal
 }
