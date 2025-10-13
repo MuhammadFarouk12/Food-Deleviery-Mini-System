@@ -9,14 +9,14 @@ const prisma = new PrismaClient()
 
 const RegisterRequest = z.object({
 	user_name: z.string(),
-	user_password: z.number().or(z.string()) 
+	user_password: z.string()
 })
 
 async function createUser(req: Request){
 	const user = await prisma.users.create({
 		data: {
-			user_name: req.body.user_name.toString(),
-			user_password: bcrypt.hashSync(req.body.user_password.toString(), 10)
+			user_name: req.body.user_name,
+			user_password: bcrypt.hashSync(req.body.user_password, 10)
 		}
 	})
 	return user
