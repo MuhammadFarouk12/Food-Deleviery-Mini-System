@@ -25,9 +25,10 @@ model orders {
 }
 
 model users {
-  user_id   Int      @id(map: "usres_pk") @default(autoincrement())
-  user_name String   @unique(map: "usres_unique") @db.VarChar
-  orders    orders[]
+  user_id       Int      @id(map: "usres_pk") @default(autoincrement())
+  user_name     String   @unique(map: "usres_unique") @db.VarChar
+  user_password String?  @db.VarChar(60)
+  orders        orders[]
 }
 
 view orders_join {

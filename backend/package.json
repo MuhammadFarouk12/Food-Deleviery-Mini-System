@@ -13,13 +13,20 @@
   "packageManager": "pnpm@10.15.1",
   "dependencies": {
     "@prisma/client": "^6.17.0",
-    "express": "^5.1.0"
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.7.2",
     "nodemon": "^3.1.10",
     "prisma": "^6.17.0",
+    "random": "^5.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
