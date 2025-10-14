@@ -3,5 +3,5 @@ export type JSONResponse = {
 	status: HTTPResponseStatus
 	data: null | object
 	code: number
-	message?: string
+	message?: string | null
 }
