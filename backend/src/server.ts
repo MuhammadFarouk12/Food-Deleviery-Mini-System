@@ -12,6 +12,7 @@ app.use(cookieParser())
 
 app.use("/api/v1/register", registerRoute)
 app.use("/api/v1/login", loginRoute)
+app.use("/api/v1/users", usersRoute)
 app.listen(3000, () => {
 	console.log("SERVER IS RUNNING VIA PORT 3000")
 })
