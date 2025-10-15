@@ -85,10 +85,10 @@ async function patchDish(req: Request, res: Response, next: NextFunction){
 async function deleteDish(req: Request, res: Response, next: NextFunction){
 		let response: JSONResponse
 		try {
-			const dishId = z.number(req.params.dishId)
+			const dishId = z.number().parse(Number(req.params.dishId))
 			const dish = await prisma.dishes.delete({
 				where: {
-					dish_id: Number(dishId)
+					dish_id: dishId
 				}
 			})
 			response = {code: 200, status: "SUCCESS", data: null, message: `Dish ${dish.dish_name} with id ${dish.dish_id} has been deleted successfully`}
