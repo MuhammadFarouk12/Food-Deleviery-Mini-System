@@ -57,8 +57,32 @@ async function addDish(req: Request, res: Response, next: NextFunction){
 	res.status(response.code).json(response)
 }
 
+async function patchDish(req: Request, res: Response, next: NextFunction){
+	let response: JSONResponse;
+	const dishId = Number(req.params.dishId)
+	try {
+		z.number().parse(dishId)
 
-export default { getAll, byPage, addDish }
+		const editValuesSchema = z.object({
+			dish_name: z.string().optional(),
+			dish_price: z.number().optional()
+		})
+
+		editValuesSchema.parse(req.body)
+		const newDish = await prisma.dishes.update({
+			where: {
+				dish_id: dishId
+			},
+			data: req.body
+		})
+		response = { status: "SUCCESS", code: 200, data: newDish }
+	} catch (error) {
+		response = handleZodPrismaServerErrors(error as Error)
+	}
+	res.status(response.code).json(response)
+}
+
+export default { getAll, byPage, addDish, patchDish }
 
 
 
