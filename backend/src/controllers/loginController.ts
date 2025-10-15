@@ -2,10 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { JWT } from "../utils/createJWT.ts"
 import { Prisma, PrismaClient } from "../../generated/prisma";
 import dotenv from "dotenv"
-import { PrismaClientKnownRequestError } from "../../generated/prisma/runtime/library";
-import z, { ZodError } from "zod";
+import z from "zod";
 import { JSONResponse } from "../utils/httpStatus";
 import bcrypt from "bcryptjs"
+import handleZodPrismaServerErrors from "../utils/errorHandler.ts";
 
 const prisma = new PrismaClient()
 dotenv.config()
@@ -34,13 +34,7 @@ export async function loginController(req: Request, res: Response, next: NextFun
 			response = {status: "ERROR", code: 400, data: null, message: `Username Does Not Exist` }
 		}
 	} catch(error){
-		if (error instanceof PrismaClientKnownRequestError) {
-			response = {status: "FAIL", code: 500, data: null, message: `Prisma Error:\n${error.message}` }
-		} else if (error instanceof ZodError){
-			response = {status: "ERROR", code: 422, data: null, message: `Request Have Some Fields Invalid or Missing` }
-		} else {
-			response = {status: "FAIL", code: 500, data: null, message: `Internal Server Error` }
-		}	
+		response = handleZodPrismaServerErrors(error as Error)
 	}
 	res.status(response.code).json(response)
 }

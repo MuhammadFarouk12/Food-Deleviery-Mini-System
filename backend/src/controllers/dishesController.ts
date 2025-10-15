@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { Prisma, PrismaClient } from "../../generated/prisma";
 import { JSONResponse } from "../utils/httpStatus";
-import z, { ZodError } from "zod";
-import { PrismaClientKnownRequestError } from "../../generated/prisma/runtime/library";
+import z from "zod";
+import handleZodPrismaServerErrors from "../utils/errorHandler";
 const prisma = new PrismaClient()
 async function getAll(req: Request, res: Response, next: NextFunction){
 		const dishes = await prisma.dishes.findMany()
@@ -29,13 +29,7 @@ async function byPage(req: Request, res: Response, next: NextFunction){
 		})
 		response = {status: "SUCCESS", code: 200, data: dishes, message: null}
 	} catch (error) {
-		if (error instanceof PrismaClientKnownRequestError) {
-			response.message = `Prisma Error:\n${error.message}`
-		} else if (error instanceof ZodError){
-			response = { status: "ERROR", code: 422, data: null, message: `Request Have Some Fields Invalid or Missing` }
-		} else {
-			response.message = `Internal Server Error`
-		}	
+		response = handleZodPrismaServerErrors(error as Error)
 	}
 	res.status(response.code).json(response)
 }
@@ -57,16 +51,10 @@ async function addDish(req: Request, res: Response, next: NextFunction){
 				}
 			})
 			response = {status: "SUCCESS", data: dish, code: 200, message: `Dish ${dishName} with price: ${dishPrice} has been added successfully`}
-			res.json(response)
 	} catch (error) {
-		if (error instanceof PrismaClientKnownRequestError) {
-			response = {status: "FAIL", code: 500, data: null, message: `Prisma Error:\n${error.message}` }
-		} else if (error instanceof ZodError){
-			response = {status: "ERROR", code: 422, data: null, message: `Request Have Some Fields Invalid or Missing` }
-		} else {
-			response = {status: "FAIL", code: 500, data: null, message: `Internal Server Error` }
-		}	
+		response = handleZodPrismaServerErrors(error as Error)
 	}
+	res.status(response.code).json(response)
 }
 
 
