@@ -32,7 +32,7 @@ async function byPage(req: Request, res: Response, next: NextFunction){
 		if (error instanceof PrismaClientKnownRequestError) {
 			response.message = `Prisma Error:\n${error.message}`
 		} else if (error instanceof ZodError){
-			response = {status: "ERROR", code: 422, data: null, message: `Request Have Some Fields Invalid or Missing` }
+			response = { status: "ERROR", code: 422, data: null, message: `Request Have Some Fields Invalid or Missing` }
 		} else {
 			response.message = `Internal Server Error`
 		}	
@@ -40,7 +40,49 @@ async function byPage(req: Request, res: Response, next: NextFunction){
 	res.status(response.code).json(response)
 }
 
-export default {
-	getAll,
-	byPage
+async function addDish(req: Request, res: Response, next: NextFunction){
+	const addDishRequest = z.object({
+			dish_name: z.string(),
+			dish_price: z.number()
+	})
+	let response: JSONResponse;
+	try {
+			addDishRequest.parse(req.body)		
+			const dishName = req.body.dish_name;
+			const dishPrice = req.body.dish_price;
+			const dish = await prisma.dishes.create({
+				data: {
+					dish_name: dishName,
+					dish_price: dishPrice
+				}
+			})
+			response = {status: "SUCCESS", data: dish, code: 200, message: `Dish ${dishName} with price: ${dishPrice} has been added successfully`}
+			res.json(response)
+	} catch (error) {
+		if (error instanceof PrismaClientKnownRequestError) {
+			response = {status: "FAIL", code: 500, data: null, message: `Prisma Error:\n${error.message}` }
+		} else if (error instanceof ZodError){
+			response = {status: "ERROR", code: 422, data: null, message: `Request Have Some Fields Invalid or Missing` }
+		} else {
+			response = {status: "FAIL", code: 500, data: null, message: `Internal Server Error` }
+		}	
+	}
 }
+
+
+export default { getAll, byPage, addDish }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
