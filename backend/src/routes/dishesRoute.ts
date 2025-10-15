@@ -7,3 +7,4 @@ dishesRoute
 	.get("/:count/:page", dishesController.byPage)
 	.post("/add", dishesController.addDish)
 	.patch("/edit/:dishId", dishesController.patchDish)
+	.delete("/delete/:dishId", dishesController.deleteDish)

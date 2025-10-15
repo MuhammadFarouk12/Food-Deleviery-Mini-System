@@ -82,7 +82,23 @@ async function patchDish(req: Request, res: Response, next: NextFunction){
 	res.status(response.code).json(response)
 }
 
-export default { getAll, byPage, addDish, patchDish }
+async function deleteDish(req: Request, res: Response, next: NextFunction){
+		let response: JSONResponse
+		try {
+			const dishId = z.number(req.params.dishId)
+			const dish = await prisma.dishes.delete({
+				where: {
+					dish_id: Number(dishId)
+				}
+			})
+			response = {code: 200, status: "SUCCESS", data: null, message: `Dish ${dish.dish_name} with id ${dish.dish_id} has been deleted successfully`}
+		} catch (error) {
+			response = handleZodPrismaServerErrors(error as Error)
+		}
+		res.status(response.code).json(response)
+}
+
+export default { getAll, byPage, addDish, patchDish, deleteDish }
 
 
 
