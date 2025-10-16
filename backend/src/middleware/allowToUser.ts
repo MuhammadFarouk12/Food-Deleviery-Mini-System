@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { JSONResponse } from "./httpStatus";
+import { JSONResponse } from "../utils/httpStatus";
 export function allowToUser(yesAllowToUser: boolean){
 
 	return async function (req: Request, res: Response, next: NextFunction){

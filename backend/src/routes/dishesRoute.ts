@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import dishesController from "../controllers/dishesController";
-import { allowToUser } from "../utils/allowToUser";
+import { allowToUser } from "../middleware/allowToUser";
 export const dishesRoute: Router = express.Router()
 
 dishesRoute

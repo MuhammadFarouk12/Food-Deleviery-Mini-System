@@ -1,6 +1,6 @@
 import express, {type Router} from "express"
 import getUsers from "../controllers/usersController.ts"
-import { allowToUser } from "../utils/allowToUser.ts";
+import { allowToUser } from "../middleware/allowToUser.ts";
 
 const usersRoute: Router = express.Router()
 usersRoute.get
