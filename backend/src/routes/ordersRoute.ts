@@ -6,4 +6,5 @@ export const ordersRoute: Router = express.Router()
 ordersRoute
 	.get("/", ordersController.getOrders)
 	.post("/order", ordersController.makeOrder)
+	.get("/myOrders", ordersController.myOrders)
 	

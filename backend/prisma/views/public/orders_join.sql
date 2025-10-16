@@ -1,5 +1,7 @@
 SELECT
   orders.order_id,
+  orders.user_id,
+  orders.dish_id,
   users.user_name,
   dishes.dish_name,
   dishes.dish_price

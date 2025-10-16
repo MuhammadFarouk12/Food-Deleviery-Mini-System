@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Prisma, PrismaClient } from "../../generated/prisma";
+import { PrismaClient } from "../../generated/prisma";
 import { JSONResponse } from "../utils/httpStatus";
 import handleZodPrismaServerErrors from "../utils/errorHandler";
 import z from "zod";
@@ -19,7 +19,6 @@ async function getOrders(req: Request, res: Response, next: NextFunction) {
 async function makeOrder(req: Request, res: Response, next: NextFunction) {
 	let response: JSONResponse
 	const requestOrderSchema = z.object({
-		user_id: z.number(),
 		dish_id: z.number()
 	})
 	try {
@@ -30,6 +29,7 @@ async function makeOrder(req: Request, res: Response, next: NextFunction) {
 				dish_id: req.body.dish_id
 			}
 		})	
+
 		const orderData = await prisma.orders_join.findFirst({
 			where: {
 				order_id: order.order_id
@@ -41,7 +41,23 @@ async function makeOrder(req: Request, res: Response, next: NextFunction) {
 	}
 	res.status(response.code).json(response)
 }
+async function myOrders(req: Request, res: Response, next: NextFunction) {
+	let response: JSONResponse
+	try {
+			const userId =  req.body.user_id
+			const userOrders = await prisma.orders_join.findMany({
+				where: {
+					user_id: userId
+				}
+			})
+		response = {code: 200, data: userOrders, message: null, status: "SUCCESS"}
+	} catch (error) {
+		response = handleZodPrismaServerErrors(error as Error)	
+	}
+	res.status(response.code).json(response)
+}
 export default {
 	getOrders,
-	makeOrder
+	makeOrder,
+	myOrders
 }

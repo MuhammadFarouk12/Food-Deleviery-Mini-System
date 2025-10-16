@@ -34,6 +34,8 @@ model users {
 
 view orders_join {
   order_id   Int?
+  user_id    Int?
+  dish_id    Int?
   user_name  String?  @db.VarChar
   dish_name  String?  @db.VarChar
   dish_price Decimal? @db.Decimal
