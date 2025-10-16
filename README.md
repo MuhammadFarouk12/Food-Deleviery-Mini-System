@@ -1,4 +1,3 @@
-
 ## How to Run This Project
 ### BACKEND
 #### Prerequisites
