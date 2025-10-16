@@ -10,14 +10,16 @@ const prisma = new PrismaClient()
 
 const RegisterRequest = z.object({
 	user_name: z.string(),
-	user_password: z.string()
+	user_password: z.string(),
+	is_admin: z.boolean()
 })
 
 async function createUser(req: Request){
 	const user = await prisma.users.create({
 		data: {
 			user_name: req.body.user_name,
-			user_password: bcrypt.hashSync(req.body.user_password, 10)
+			user_password: bcrypt.hashSync(req.body.user_password, 10),
+			is_admin: req.body.is_admin
 		}
 	})
 	return user
@@ -28,7 +30,7 @@ export async function registerController(req: Request, res: Response, next: Next
 	try {
 		RegisterRequest.parse(req.body)
 		const user =  await createUser(req)
-		const userToken = JWT({user_name: user.user_name, user_id: user.user_id, iat: Date.now()})
+		const userToken = JWT({user_name: user.user_name, user_id: user.user_id, iat: Date.now(), is_admin: user.is_admin || false})
 		response = { status: "SUCCESS", code: 200, data: {user_id: user.user_id, user_name: user.user_name} }
 		res.cookie('token', userToken, {path: '/', sameSite: true})	
 	} catch (error) {

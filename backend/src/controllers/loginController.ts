@@ -26,7 +26,7 @@ export async function loginController(req: Request, res: Response, next: NextFun
 			const isPasswordCorrect = bcrypt.compareSync(req.body.user_password, user.user_password)
 			if(isPasswordCorrect){
 				response = {status: "SUCCESS", code: 200, data: null, message: `${user.user_name} Have Successfully Logged In` }
-				res.cookie('token', JWT({user_name: user.user_name, user_id: user.user_id, iat: Date.now()}), {sameSite: true, path: "/"})
+				res.cookie('token', JWT({user_name: user.user_name, user_id: user.user_id, iat: Date.now(), is_admin: user.is_admin || false}), {sameSite: true, path: "/"})
 			} else {
 				response = {status: "ERROR", code: 401, data: null, message: `Incorrect Password or Username` }
 			}

@@ -8,7 +8,7 @@ export default function handleZodPrismaServerErrors(error: Error): JSONResponse{
 	} else if (error instanceof ZodError){
 		// JSON.parse()[0].path[0]
 		let zodErrorObject = JSON.parse(error.message)[0]
-		console.log(zodErrorObject)
+		// console.log(zodErrorObject)
 		return { status: "ERROR", code: 422, data: null, message: `${zodErrorObject.message} at "${zodErrorObject.path[0]}"` }
 	} else {
 		return {status: "FAIL", code: 500, data: null, message: `Internal Server Error` }
