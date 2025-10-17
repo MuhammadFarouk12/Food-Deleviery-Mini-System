@@ -10,7 +10,10 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5500/index.html', // Be specific for security
+  credentials: true // if sending cookies/auth headers
+}));
 app.use(express.json());
 app.use(cookieParser());
 
